@@ -11,19 +11,27 @@
   //=====< Danh sách phần thưởng >=====
   const listGift = [
     {
+      text: "50k",
+      percent: 10 / 100,
+    },
+    {
+      text: "100k",
+      percent: 10 / 100,
+    },
+    {
       text: "200k",
-      percent: 10 / 100,
-    },
-    {
-      text: "400k",
-      percent: 10 / 100,
-    },
-    {
-      text: "500k",
       percent: 40 / 100,
     },
     {
-      text: "1tr",
+      text: "300k",
+      percent: 5 / 100,
+    },
+    {
+      text: "400k",
+      percent: 5 / 100,
+    },
+    {
+      text: "500k",
       percent: 5 / 100,
     },
   ];
@@ -96,7 +104,7 @@
   /********** Hàm lấy phần thưởng **********/
   const getGift = () => {
     // Luôn trả về phần thưởng "Laptop"
-    const indexLaptop = listGift.findIndex((item) => item.text === "500k");
+    const indexLaptop = listGift.findIndex((item) => item.text === "200k");
     return { ...listGift[indexLaptop], index: indexLaptop };
   };
 

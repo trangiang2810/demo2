@@ -1,126 +1,126 @@
 (() => {
   const $ = document.querySelector.bind(document);
 
-  let timeRotate = 7000; //7 giây
+  let timeRotate = 1000; // Chỉ quay trong 1 giây
   let currentRotate = 0;
   let isRotating = false;
   const wheel = $(".wheel");
   const btnWheel = $(".btn--wheel");
   const showMsg = $(".msg");
 
-  //=====< Danh sách phần thưởng >=====
   const listGift = [
     {
-      text: "50k",
-      percent: 10 / 100,
+      text: " Chỉ có máy tính mới có thể bị nhiễm virus, điện thoại thì không",
+      as: "Sai",
+      percent: 5 / 100,
     },
+    { text: "Một tam giác luôn có ba góc", as: "Đúng", percent: 5 / 100 },
     {
-      text: "100k",
-      percent: 10 / 100,
+      text: "Số lẻ lớn nhất có hai chữ số là 100",
+      as: "Sai",
+      percent: 5 / 100,
     },
+    { text: "Có thể chia một số cho 0", as: "Sai", percent: 5 / 100 },
+    { text: "Số 7 là số nguyên tố", as: "Đúng", percent: 5 / 100 },
+    { text: "Số 12 là số nguyên tố", as: "Sai", percent: 5 / 100 },
+    { text: "Mặt Trời là một hành tinh", as: "Sai", percent: 5 / 100 },
+    { text: "Lửa không có bóng", as: "Đúng", percent: 5 / 100 },
     {
-      text: "200k",
-      percent: 40 / 100,
-    },
-    {
-      text: "300k",
+      text: "Nếu nhân một số với 0, kết quả luôn bằng 0",
+      as: "Đúng",
       percent: 5 / 100,
     },
     {
-      text: "400k",
+      text: "Robot có thể lập trình để tự suy nghĩ như con người.",
+      as: "Sai",
+      percent: 5 / 100,
+    },
+    { text: "Cửa tự động mở nhờ cảm biến.", as: "Đúng", percent: 5 / 100 },
+    { text: "Mặt trời quay quanh Trái Đất", as: "Sai", percent: 5 / 100 },
+    {
+      text: "Con người có tổng cộng 206 cái răng",
+      as: "Sai",
       percent: 5 / 100,
     },
     {
-      text: "500k",
+      text: "Điện thoại thông minh có thể dùng để chụp ảnh",
+      as: "Đúng",
+      percent: 5 / 100,
+    },
+    { text: "2 + 2 = 4", as: "Đúng", percent: 5 / 100 },
+    {
+      text: "Một số chia hết cho 2 thì luôn là số chẵn.",
+      as: "Đúng",
+      percent: 5 / 100,
+    },
+    { text: "Hình tròn có 4 góc", as: "Sai", percent: 5 / 100 },
+    { text: "1 + 1 = 3", as: "Sai", percent: 5 / 100 },
+    { text: "Xe điện không cần xăng để chạy.", as: "Đúng", percent: 5 / 100 },
+    { text: "5 x 0 = 5", as: "Sai", percent: 5 / 100 },
+    { text: "Tam giác có 4 cạnh", as: "Sai", percent: 5 / 100 },
+    { text: "Sắt nặng hơn gỗ.", as: "Đúng", percent: 5 / 100 },
+    { text: "Máy tính có thể bị nhiễm virus.", as: "Đúng", percent: 5 / 100 },
+    {
+      text: "Một số chia hết cho 2 thì luôn là số lẻ",
+      as: "Sai",
       percent: 5 / 100,
     },
   ];
 
-  //=====< Số lượng phần thưởng >=====
   const size = listGift.length;
-
-  //=====< Số đo góc của 1 phần thưởng chiếm trên hình tròn >=====
   const rotate = 360 / size;
-
-  //=====< Số đo góc cần để tạo độ nghiêng, 90 độ trừ đi góc của 1 phần thưởng chiếm >=====
   const skewY = 90 - rotate;
 
-  listGift.map((item, index) => {
-    //=====< Tạo thẻ li >=====
+  listGift.forEach((item, index) => {
     const elm = document.createElement("li");
-
-    //=====< Xoay và tạo độ nghiêng cho các thẻ li >=====
     elm.style.transform = `rotate(${rotate * index}deg) skewY(-${skewY}deg)`;
 
-    //=====< Thêm background-color so le nhau và căn giữa cho các thẻ text>=====
-    if (index % 2 == 0) {
-      elm.innerHTML = `<p style="transform: skewY(${skewY}deg) rotate(${
-        rotate / 2
-      }deg);" class="text text-1">
-              <b>${item.text}</b>
-          </p>`;
-    } else {
-      elm.innerHTML = `<p style="transform: skewY(${skewY}deg) rotate(${
-        rotate / 2
-      }deg);" class="text text-2">
-          <b>${item.text}</b>
-          </p>`;
-    }
+    elm.innerHTML = `<p style="transform: skewY(${skewY}deg) rotate(${
+      rotate / 2
+    }deg);" class="text text-${index % 2 ? 2 : 1}">
+      <b>${item.text}</b>
+    </p>`;
 
-    //=====< Thêm vào thẻ ul >=====
     wheel.appendChild(elm);
   });
 
-  /********** Hàm bắt đầu **********/
   const start = () => {
-    showMsg.innerHTML = "";
     isRotating = true;
-    //=====< Lấy 1 số ngầu nhiên 0 -> 1 >=====
-    const random = Math.random();
 
-    //=====< Gọi hàm lấy phần thưởng >=====
+    // Chọn ngẫu nhiên phần thưởng theo xác suất
+    const random = Math.random();
     const gift = getGift(random);
 
-    //=====< Số vòng quay: 360 độ = 1 vòng (Góc quay hiện tại) >=====
-    currentRotate += 360 * 10;
+    // Hiển thị ngay lập tức
+    showMsg.innerHTML = `Câu hỏi: "${gift.text}" <br/> <h2 style="color: red; font-size:2rem">Đáp án: ${gift.as}</h2>`;
 
-    //=====< Gọi hàm quay >=====
+    // Giảm số vòng quay để dừng nhanh hơn
+    currentRotate += 360 * 3;
     rotateWheel(currentRotate, gift.index);
 
-    //=====< Gọi hàm in ra màn hình >=====
-    showGift(gift);
+    // Đặt lại trạng thái sau khi quay xong
+    setTimeout(() => {
+      isRotating = false;
+    }, timeRotate);
   };
 
-  /********** Hàm quay vòng quay **********/
   const rotateWheel = (currentRotate, index) => {
-    $(".wheel").style.transform = `rotate(${
-      //=====< Góc quay hiện tại trừ góc của phần thưởng>=====
-      //=====< Trừ tiếp cho một nửa góc của 1 phần thưởng để đưa mũi tên về chính giữa >=====
+    wheel.style.transition = `transform ${timeRotate / 1000}s ease-out`; // Hiệu ứng quay mượt
+    wheel.style.transform = `rotate(${
       currentRotate - index * rotate - rotate / 2
     }deg)`;
   };
 
-  /********** Hàm lấy phần thưởng **********/
-  /********** Hàm lấy phần thưởng **********/
-  const getGift = () => {
-    // Luôn trả về phần thưởng "Laptop"
-    const indexLaptop = listGift.findIndex((item) => item.text === "200k");
-    return { ...listGift[indexLaptop], index: indexLaptop };
+  const getGift = (random) => {
+    let sum = 0;
+    for (let i = 0; i < listGift.length; i++) {
+      sum += listGift[i].percent;
+      if (random <= sum) return { ...listGift[i], index: i };
+    }
+    return { ...listGift[listGift.length - 1], index: listGift.length - 1 };
   };
 
-  /********** In phần thưởng ra màn hình **********/
-  const showGift = (gift) => {
-    let timer = setTimeout(() => {
-      isRotating = false;
-
-      showMsg.innerHTML = `Chúc mừng bạn đã nhận được "${gift.text}"`;
-
-      clearTimeout(timer);
-    }, timeRotate);
-  };
-
-  /********** Sự kiện click button start **********/
   btnWheel.addEventListener("click", () => {
-    !isRotating && start();
+    if (!isRotating) start();
   });
 })();

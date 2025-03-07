@@ -1,7 +1,7 @@
 (() => {
   const $ = document.querySelector.bind(document);
 
-  let timeRotate = 1000; // Chỉ quay trong 1 giây
+  let timeRotate = 1000;
   let currentRotate = 0;
   let isRotating = false;
   const wheel = $(".wheel");
@@ -67,45 +67,48 @@
     },
   ];
 
-  const size = listGift.length;
-  const rotate = 360 / size;
-  const skewY = 90 - rotate;
+  const renderWheel = () => {
+    wheel.innerHTML = "";
+    const size = listGift.length;
+    const rotate = 360 / size;
+    const skewY = 90 - rotate;
 
-  listGift.forEach((item, index) => {
-    const elm = document.createElement("li");
-    elm.style.transform = `rotate(${rotate * index}deg) skewY(-${skewY}deg)`;
-
-    elm.innerHTML = `<p style="transform: skewY(${skewY}deg) rotate(${
-      rotate / 2
-    }deg);" class="text text-${index % 2 ? 2 : 1}">
-      <b>${item.text}</b>
-    </p>`;
-
-    wheel.appendChild(elm);
-  });
+    listGift.forEach((item, index) => {
+      const elm = document.createElement("li");
+      elm.style.transform = `rotate(${rotate * index}deg) skewY(-${skewY}deg)`;
+      elm.innerHTML = `<p style="transform: skewY(${skewY}deg) rotate(${
+        rotate / 2
+      }deg);" class="text text-${index % 2 ? 2 : 1}">
+        <b>${item.text}</b>
+      </p>`;
+      wheel.appendChild(elm);
+    });
+  };
 
   const start = () => {
+    if (listGift.length === 0) {
+      showMsg.innerHTML = "Hết câu hỏi!";
+      return;
+    }
     isRotating = true;
-
-    // Chọn ngẫu nhiên phần thưởng theo xác suất
     const random = Math.random();
     const gift = getGift(random);
 
-    // Hiển thị ngay lập tức
     showMsg.innerHTML = `Câu hỏi: "${gift.text}" <br/> <h2 style="color: red; font-size:2rem">Đáp án: ${gift.as}</h2>`;
-
-    // Giảm số vòng quay để dừng nhanh hơn
     currentRotate += 360 * 3;
     rotateWheel(currentRotate, gift.index);
 
-    // Đặt lại trạng thái sau khi quay xong
     setTimeout(() => {
+      listGift.splice(gift.index, 1); // Xóa câu hỏi đã chọn
+      renderWheel(); // Cập nhật lại vòng quay
       isRotating = false;
     }, timeRotate);
   };
 
   const rotateWheel = (currentRotate, index) => {
-    wheel.style.transition = `transform ${timeRotate / 1000}s ease-out`; // Hiệu ứng quay mượt
+    const size = listGift.length;
+    const rotate = 360 / size;
+    wheel.style.transition = `transform ${timeRotate / 1000}s ease-out`;
     wheel.style.transform = `rotate(${
       currentRotate - index * rotate - rotate / 2
     }deg)`;
@@ -123,4 +126,6 @@
   btnWheel.addEventListener("click", () => {
     if (!isRotating) start();
   });
+
+  renderWheel();
 })();
